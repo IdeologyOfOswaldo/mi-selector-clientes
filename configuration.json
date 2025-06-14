@@ -1,0 +1,12 @@
+{
+  "clientes": [
+    {
+      "id": "001",
+      "url": "https://aifa.mpproducciones.com.mx/my"
+    },
+    {
+      "id": "002",
+      "url": "https://auditorio.mpproducciones.com.mx/my"
+    }
+  ]
+}
