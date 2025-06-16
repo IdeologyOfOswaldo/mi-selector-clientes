@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const clienteInput = document.getElementById('clienteInput'); // Ahora es un input
-    const clientesList = document.getElementById('clientesList'); // El datalist
+    const clienteInput = document.getElementById('clienteInput');
     const continuarBtn = document.getElementById('continuarBtn');
-    let clientesData = []; // Aquí almacenaremos los datos de los clientes
+    let clientesData = []; // To store client data
 
-    // Función para cargar el archivo configuration.json
+    // Function to load the configuration.json file
     async function loadConfiguration() {
         try {
             const response = await fetch('configuration.json');
@@ -12,26 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`Error al cargar configuration.json: ${response.statusText}`);
             }
             const config = await response.json();
-            clientesData = config.clientes; // Guardamos los datos de los clientes
+            clientesData = config.clientes; // Store the client data
 
-            // Llenar el datalist con las opciones de IDs de clientes
-            // Cada option en un datalist tiene solo un 'value'
-            // El texto que se muestra es el mismo que el valor
-            clientesData.forEach(cliente => {
-                const option = document.createElement('option');
-                option.value = cliente.id; // El valor de la opción (lo que se muestra y lo que se selecciona)
-                // option.textContent = `Cliente ID: ${cliente.id}`; // Esto no es necesario para datalist
-                clientesList.appendChild(option);
-            });
-
-            // --- ESTA ES LA LÍNEA QUE REMOVIMOS O COMENTAMOS ---
-            // Opcional: Si quieres que el primer ID esté preseleccionado al cargar
-            // if (clientesData.length > 0) {
-            //     clienteInput.value = clientesData[0].id;
-            // }
-            // --- FIN DE LA MODIFICACIÓN ---
-
-            // Aseguramos que el input esté vacío al inicio (aunque por defecto ya lo estaría si no hay valor asignado)
+            // Ensure the input starts empty
             clienteInput.value = '';
 
         } catch (error) {
@@ -40,29 +22,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Función para manejar la redirección
+    // Function to handle redirection
     function redirectToClientUrl() {
-        const enteredId = clienteInput.value; // Obtener el valor actual del input
+        const enteredId = clienteInput.value.trim(); // Get the input value and trim whitespace
 
-        // Buscar el cliente que coincida exactamente con el ID ingresado
+        // Find the client that exactly matches the entered ID
         const selectedClient = clientesData.find(cliente => cliente.id === enteredId);
 
         if (selectedClient && selectedClient.url) {
             console.log(`Redirigiendo al Cliente ID: ${selectedClient.id} a la URL: ${selectedClient.url}`);
-            window.location.href = selectedClient.url; // Redirige a la URL
+            window.location.href = selectedClient.url; // Redirect to the URL
         } else {
-            alert(`El ID de cliente "${enteredId}" no es válido o la URL no está definida. Por favor, selecciona uno de la lista o corrige el ID.`);
+            alert(`El ID de cliente "${enteredId}" no es válido o no existe. Por favor, ingresa un ID correcto.`);
             console.error('ID de cliente no encontrado o URL no definida:', enteredId);
         }
     }
 
-    // Cargar la configuración cuando el DOM esté completamente cargado
+    // Load configuration when the DOM is fully loaded
     loadConfiguration();
 
-    // Asignar el evento click al botón de continuar
+    // Assign the click event to the continue button
     continuarBtn.addEventListener('click', redirectToClientUrl);
 
-    // Opcional: También puedes añadir un evento 'keydown' para que al presionar 'Enter' también se redirija
+    // Optional: Also add a 'keydown' event for 'Enter' key to redirect
     clienteInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
             redirectToClientUrl();
